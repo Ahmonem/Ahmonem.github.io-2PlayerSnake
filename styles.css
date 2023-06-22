@@ -54,9 +54,9 @@ body {
   font-size: 7vh;
   color: blue;
   opacity: .5;
-  top: 10px;
   justify-content: center;
-  position: relative;
+  position: absolute;
+  top: 10px;
   left: 870px;
 }
 

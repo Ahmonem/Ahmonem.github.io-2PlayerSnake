@@ -251,6 +251,9 @@ function randomGridPosition() {
           checkIfAPlayerLostGame().forEach((key) => {
             if (key.id === playerId) {
               if (key.lostGame) {
+                const winOrLose = document.getElementById('winOrLose')
+                console.log(winOrLose)
+                winOrLose.innerHTML = "You Lose"
                 setTimeout(() => {
                   allAppleRef.remove()
                   allTreeRef.remove()
@@ -260,7 +263,9 @@ function randomGridPosition() {
               } 
 
               if (!key.lostGame) {
-                
+                const winOrLose = document.getElementById('winOrLose')
+                console.log(winOrLose)
+                winOrLose.innerHTML = "You Win"
                 setTimeout(() => {
                   allAppleRef.remove()
                   allTreeRef.remove()
