@@ -1,57 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>MultiPlayer Snake</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+<html>
+  <head>
+    <title>Multiplayer Snake</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css" type="text/css">
+  </head>
+  <body>
+      <div class="score" id="score">0</div>
+      <a class="menu" href="https://ahmonem.github.io/">Menu</a>
+    <div id="game-board">
 
-<style>
-#gameScreen {
-  display: none;
-}
-</style>
-</head>
-<body>
-  <section class="vh-100">
-    <div class="container h-100">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script>
+      // NOTE - INCLUDE YOUR FIREBASE CONFIG HERE FOR ANYTHING TO WORK:
+      const firebaseConfig = {
+        apiKey: "AIzaSyDPC_IRmHdzuEXDe6GNCmsJfyLzLXuug0o",
+        authDomain: "playersnake-3717c.firebaseapp.com",
+        databaseURL: "https://playersnake-3717c-default-rtdb.firebaseio.com",
+        projectId: "playersnake-3717c",
+        storageBucket: "playersnake-3717c.appspot.com",
+        messagingSenderId: "146991017595",
+        appId: "1:146991017595:web:dc1d880f58f05efacabcde",
+        measurementId: "G-9861SRCNNL"
+      };
+      firebase.initializeApp(firebaseConfig);
+    </script>
 
-      <div id="initialScreen" class="h-100">
-        <div class="d-flex flex-column align-items-center justify-content-center h-100">
-            <h1>Multiplayer Snake</h1>
-            <button
-              type="submit"
-              class="btn btn-success"
-              id="newGameButton"
-            >
-              Create New Game
-            </button>
-            <div>OR</div>
-            <div class="form-group">
-              <input type="text" placeholder="Enter Game Code" id="gameCodeInput"/>
-            </div>
-            <button
-              type="submit"
-              class="btn btn-success"
-              id="joinGameButton"
-            >
-              Join Game
-            </button>
-        </div>
-      </div>
 
-      <div id="gameScreen" class="h-100">
-        <div class="d-flex flex-column align-items-center justify-content-center h-100">
-
-          <h1>Your game code is: <span id="gameCodeDisplay"></span></h1>
-
-          <canvas id="canvas"></canvas>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
-  <script src="index.js"></script>
-</body>
+    <script src="/KeyPressListener.js"></script>
+    <script src="/app.js"></script>
+  </body>
 </html>
