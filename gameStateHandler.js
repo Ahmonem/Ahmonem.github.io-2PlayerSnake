@@ -31,8 +31,9 @@ function initGame() {
   allPlayersRef.on("value", (snapshot) => {
     //Fires whenever a change occurs
     players = snapshot.val() || {};
+    
   })
-  
+
   function main(currentTime) {
     if (gameOver || checkIfAPlayerLostGame(players).some(checkifLostOrWon)) {
       checkIfAPlayerLostGame(players).forEach((key) => {

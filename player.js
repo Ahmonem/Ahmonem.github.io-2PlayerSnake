@@ -55,23 +55,22 @@ export function getSnakeHead(players, playerId) {
     }
 }
 
-
 export function onSnake(position, {ignoreHead = false} = {}, players, playerId) {
-    if (players[playerId]) {
-      return players[playerId].snakeBody.some((segment, index) => {
-        if (ignoreHead && index === 0) return false
-        if (isCollision(segment, position)) {
-          players[playerId].lostGame = true
-        }
-        return isCollision(segment, position)
-      })
-    }
+  if (players[playerId]) {
+    return players[playerId].snakeBody.some((segment, index) => {
+      if (ignoreHead && index === 0) return false
+      if (isCollision(segment, position)) {
+        players[playerId].lostGame = true
+      }
+      return isCollision(segment, position)
+    })
+  }
 }
 
 export function snakeIntersection(players, playerId) {
-    if (players[playerId]) {
-       return onSnake(players[playerId].snakeBody[0], {ignoreHead: true}, players, playerId)
-    }
+  if (players[playerId]) {
+      return onSnake(players[playerId].snakeBody[0], {ignoreHead: true}, players, playerId)
+  }
 }
 
 export function getInputDirection() {

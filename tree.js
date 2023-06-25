@@ -10,6 +10,10 @@ export function drawTree(gameContainer, treeElement, allTreeRef) {
       // Create the DOM Element
       const newTree = document.createElement('div')
       newTree.classList.add("Tree")
+      newTree.innerHTML = `
+      <img src="./images/tree.png" alt="hi"  width="40" height="40">
+      `
+
       
       // Position the Element
       newTree.style.gridRowStart =  tree.y

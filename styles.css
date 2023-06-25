@@ -19,22 +19,14 @@ body {
 }
 
 #game-board {
-  background-color: rgb(34, 136, 34);
+  z-index: -1;
+  position: absolute;
   width: 100vmin;
   height: 100vmin;
   display: grid;
+  background-color: rgb(55, 124, 55);
   grid-template-rows: repeat(21, 1fr);
   grid-template-columns: repeat(21, 1fr);
-}
-
-.Apple {
-  background-color: red;
-  border: .25vmin solid black;
-}
-
-.Tree {
-  background-color: rgba(0, 0, 0, 0.911);
-  border: .25vmin solid rgb(255, 255, 255);
 }
 
 .score {
@@ -45,7 +37,7 @@ body {
   opacity: .5;
   justify-content: center;
   position: relative;
-  left: 1070px;
+  left: 530px;
 }
 
 .winOrLose {
@@ -61,6 +53,6 @@ body {
 }
 
 .menu {
-  top: 10px;
-  left: 10px;
+  position: relative;
+  right: 530px;
 }
