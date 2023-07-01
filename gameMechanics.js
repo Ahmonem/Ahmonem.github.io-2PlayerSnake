@@ -28,7 +28,6 @@ export function outsideGrid(position, players, playerId) {
         position.y < 1 || position.y > 21
       )
     }
-    
 }
 
 export function checkIfAPlayerLostGame(players) {

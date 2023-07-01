@@ -7,7 +7,13 @@
     <link rel="stylesheet" href="styles.css" type="text/css">
   </head>
   <body>
-      <div class="score" id="score">0</div>
+    <script>
+      function pauseGame() {
+        confirm("Game is paused press OK to resume")
+      }
+    </script>
+      <button class="button" id="button" onclick="pauseGame()"> Pause </button>
+      <div class="score" id="score"></div>
       <div class="winOrLose" id="winOrLose"></div>
       <a class="menu" href="https://ahmonem.github.io/">Menu</a>
     <div id="game-board">

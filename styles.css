@@ -14,7 +14,6 @@ body {
 }
 
 .Character {
-  background-color: blue;
   border: .25vmin solid black;
 }
 
@@ -37,7 +36,19 @@ body {
   opacity: .5;
   justify-content: center;
   position: relative;
-  left: 530px;
+  left: 550px;
+}
+
+.button {
+  display:block;
+  font-weight: bold;
+  font-size: 2vh;
+  color: blue;
+  opacity: .5;
+  justify-content: center;
+  position: relative;
+  right: 490px;
+  bottom: 100px
 }
 
 .winOrLose {

@@ -13,6 +13,7 @@ export function drawTree(gameContainer, treeElement, allTreeRef) {
       newTree.innerHTML = `
       <img src="./images/tree.png" alt="hi"  width="40" height="40">
       `
+      newTree.style.backgroundColor = tree.color
 
       
       // Position the Element
@@ -30,10 +31,12 @@ export function placeTree(x,y, players, playerId) {
     const key = getKeyString(x, y)
     const treeRef = firebase.database().ref(`tree/${key}`);
     const id = players[playerId].id
+    const color = players[playerId].color
     treeRef.set({
       x,
       y,
       id,
+      color,
     })
 }
 

@@ -5,20 +5,72 @@ import { placeTree } from "./tree.js";
 let newSegments = 0
 let inputDirection = {x: 0, y:0}
 let lastInputDirection = {x: 0, y:0}
+let playerColors = ['blue', 'yellow', 'red', 'orange', 'white', 'purple', 'pink', 'violet']
+let pickedColors = []
+let scoreBoard = []
+export function randomFromArray() {
+  return Math.floor(Math.random() * 7) 
+}
 
-export function drawSnake(players, gameContainer, playerElements) {
+export function removeItemOnce(arr, value) {
+  var index = arr.indexOf(value);
+  if (index > -1) {
+    arr.splice(index, 1);
+  }
+  return arr;
+}
+
+export function drawSnake(players, gameContainer, playerElements, playerId) {
     Object.keys(players).forEach((key) => {
       const characterState = players[key];
-
+      if (pickedColors.length < Object.keys(players).length) {
+        if (characterState.color == null) {
+          characterState.color = Math.floor(Math.random()*16777215).toString(16);
+          removeItemOnce(playerColors, characterState.color) 
+        }
+        pickedColors.push(characterState.color)
+      }
+        
+      if (playerId == key) {
+        const playerScore = document.createElement('div')
+        playerScore.style.left = "500px"
+        playerScore.id = key
+        playerScore.className = "score"
+        playerScore.textContent = characterState.score
+        playerScore.style.color = characterState.color
+        playerScore.style.backgroundColor = "grey"
+        if (document.getElementById(key)) {
+          document.getElementById(key).remove()
+        }
+        document.body.appendChild(playerScore)
+        scoreBoard.push(playerScore.id)
+      }
+      else {
+        const playerScore = document.createElement('div')
+        playerScore.style.left = "500px"
+        playerScore.id = key
+        playerScore.className = "score"
+        playerScore.textContent = characterState.score
+        playerScore.style.color = characterState.color
+        playerScore.style.backgroundColor = "grey"
+        if (document.getElementById(key)) {
+          document.getElementById(key).remove()
+        }
+        document.body.appendChild(playerScore)
+        scoreBoard.push(playerScore.id)
+      }
+      
       characterState.snakeBody.forEach(segment => {
         const addedCharacterElement = document.createElement('div')
         addedCharacterElement.style.gridRowStart = segment.y
         addedCharacterElement.style.gridColumnStart = segment.x
+        addedCharacterElement.style.backgroundColor = characterState.color
         addedCharacterElement.classList.add('Character')
         playerElements[key] = addedCharacterElement;
 
         gameContainer.appendChild(addedCharacterElement);
       })
+
     })
 }
 
@@ -78,7 +130,7 @@ export function getInputDirection() {
   return inputDirection
 }
 
-export function updateSnake(players, playerId, playerRef, tree, apple, score) {
+export function updateSnake(players, playerId, playerRef, tree, apple) {
     if (players[playerId]) {
       addSegments(players, playerId)
 
@@ -93,13 +145,17 @@ export function updateSnake(players, playerId, playerRef, tree, apple, score) {
 
       playerRef.set(players[playerId]);
 
-      attemptGrabApple(players[playerId].snakeBody[0].x, players[playerId].snakeBody[0].y, apple, score, players, playerId)
+      attemptGrabApple(players[playerId].snakeBody[0].x, players[playerId].snakeBody[0].y, apple, players, playerId, playerRef)
       
       if (tree) {
         hitTree(players[playerId].snakeBody[0].x, players[playerId].snakeBody[0].y, players, playerId, playerRef, tree)
       }
+      let score = document.getElementById(playerId)
+      if (score) {
+        score.textContent = players[playerId].score
+      }  
+      
     }
-    
 }
 
 export function addSegments(players, playerId) {
@@ -111,14 +167,16 @@ export function addSegments(players, playerId) {
     newSegments = 0
 }
 
-export function attemptGrabApple(x, y, apple, score, players, playerId) {
+export function attemptGrabApple(x, y, apple, players, playerId, playerRef) {
   const key = getKeyString(x, y);
   if (apple) {
     if (apple[key]) {
-      // Remove this key from data, then uptick Player's apple count and expand snake by 2 and add a tree
       firebase.database().ref(`apple`).remove();
       expandSnake(2)
-      score.textContent = parseInt(score.textContent) + 1
+      playerRef.update({
+        score: players[playerId].score + 1
+      })
+      
       placeTree(x,y, players, playerId)
     }
   }
@@ -127,7 +185,6 @@ export function attemptGrabApple(x, y, apple, score, players, playerId) {
 export function hitTree(x, y, players, playerId, playerRef, tree) {
   const key = getKeyString(x, y);
   if (tree[key] && tree[key].id !== players[playerId].id) {
-    // Remove this key from data, then uptick Player's apple count and expand snake by 2 and add a tree
     firebase.database().ref(`tree`).remove();
     playerRef.update({
       lostGame: true

@@ -84,7 +84,7 @@ function initGame() {
 
   function draw() {
       gameContainer.innerHTML = ''
-      drawSnake(players, gameContainer, playerElements)
+      drawSnake(players, gameContainer, playerElements, playerId)
       drawApple(appleElement, gameContainer, allAppleRef)
       drawTree(gameContainer, treeElement, allTreeRef)
   }
@@ -107,6 +107,7 @@ function initGame() {
       gameContainer.removeChild(playerElements[removedKey]);
       delete playerElements[removedKey];
     }
+    document.body.removeChild(document.getElementById(removedKey))
   })
 
   //This block will remove apple from local state when Firebase `apple` value updates
@@ -162,8 +163,13 @@ firebase.auth().onAuthStateChanged((user) => {
     playerRef.set({
       id: playerId,
       snakeBody: [{x, y}],
-      lostGame: false
+      lostGame: false,
+      color: null,
+      score: 0,
+      scoreAdded: false
     })
+
+
 
     
     //Remove me from Firebase when I diconnect
