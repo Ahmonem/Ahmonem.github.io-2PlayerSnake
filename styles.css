@@ -67,3 +67,15 @@ body {
   position: relative;
   right: 530px;
 }
+
+p {
+  position: absolute;
+  right: 1560px;
+  bottom: 720px;
+}
+
+h1 {
+  position: absolute;
+  right: 1740px;
+  bottom: 850px
+}
