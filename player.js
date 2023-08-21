@@ -5,7 +5,6 @@ import { placeTree } from "./tree.js";
 let newSegments = 0
 let inputDirection = {x: 0, y:0}
 let lastInputDirection = {x: 0, y:0}
-let playerColors = ['blue', 'yellow', 'red', 'orange', 'white', 'purple', 'pink', 'violet']
 let pickedColors = []
 let scoreBoard = []
 export function randomFromArray() {
@@ -24,9 +23,13 @@ export function drawSnake(players, gameContainer, playerElements, playerId) {
     Object.keys(players).forEach((key) => {
       const characterState = players[key];
       if (pickedColors.length < Object.keys(players).length) {
+        console.log(characterState)
         if (characterState.color == null) {
           characterState.color = Math.floor(Math.random()*16777215).toString(16);
-          removeItemOnce(playerColors, characterState.color) 
+          console.log(characterState.color)
+        }
+        else {
+          console.log(characterState.color, "not null")
         }
         pickedColors.push(characterState.color)
       }
