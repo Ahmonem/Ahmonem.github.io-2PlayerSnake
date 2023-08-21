@@ -7,6 +7,17 @@ let inputDirection = {x: 0, y:0}
 let lastInputDirection = {x: 0, y:0}
 let pickedColors = []
 let scoreBoard = []
+
+
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
 export function randomFromArray() {
   return Math.floor(Math.random() * 7) 
 }
@@ -20,61 +31,65 @@ export function removeItemOnce(arr, value) {
 }
 
 export function drawSnake(players, gameContainer, playerElements, playerId) {
-    Object.keys(players).forEach((key) => {
-      const characterState = players[key];
-      if (pickedColors.length < Object.keys(players).length) {
-        console.log(characterState)
-        if (characterState.color == null) {
-          characterState.color = Math.floor(Math.random()*16777215).toString(16);
-          console.log(characterState.color)
-        }
-        else {
-          console.log(characterState.color, "not null")
-        }
-        pickedColors.push(characterState.color)
-      }
-        
-      if (playerId == key) {
-        const playerScore = document.createElement('div')
-        playerScore.style.left = "500px"
-        playerScore.id = key
-        playerScore.className = "score"
-        playerScore.textContent = characterState.score
-        playerScore.style.color = characterState.color
-        playerScore.style.backgroundColor = "grey"
-        if (document.getElementById(key)) {
-          document.getElementById(key).remove()
-        }
-        document.body.appendChild(playerScore)
-        scoreBoard.push(playerScore.id)
-      }
-      else {
-        const playerScore = document.createElement('div')
-        playerScore.style.left = "500px"
-        playerScore.id = key
-        playerScore.className = "score"
-        playerScore.textContent = characterState.score
-        playerScore.style.color = characterState.color
-        playerScore.style.backgroundColor = "grey"
-        if (document.getElementById(key)) {
-          document.getElementById(key).remove()
-        }
-        document.body.appendChild(playerScore)
-        scoreBoard.push(playerScore.id)
-      }
+  Object.keys(players).forEach((key) => {
+    const characterState = players[key];
+    if (characterState.color == null) {
+      characterState.color = getRandomColor()
+      // console.log(characterState.color, "Other Player:",key, "Current Player:", playerId)
+    }
+    else {
+      // console.log(characterState.color, "not null", "Other Player:", key, "Current Player:", playerId)
+    }
+    pickedColors.push(characterState.color)
       
-      characterState.snakeBody.forEach(segment => {
-        const addedCharacterElement = document.createElement('div')
-        addedCharacterElement.style.gridRowStart = segment.y
-        addedCharacterElement.style.gridColumnStart = segment.x
-        addedCharacterElement.style.backgroundColor = characterState.color
-        addedCharacterElement.classList.add('Character')
-        playerElements[key] = addedCharacterElement;
-
-        gameContainer.appendChild(addedCharacterElement);
+    if (playerId == key) {
+      const playerScore = document.createElement('div')
+      playerScore.style.left = "500px"
+      playerScore.id = key
+      playerScore.className = "score"
+      playerScore.textContent = characterState.score
+      playerScore.style.color = characterState.color
+      playerScore.style.backgroundColor = "grey"
+      if (document.getElementById(key)) {
+        document.getElementById(key).remove()
+      }
+      document.body.appendChild(playerScore)
+      scoreBoard.push(playerScore.id)
+    }
+    else {
+      const playerScore = document.createElement('div')
+      playerScore.style.left = "500px"
+      playerScore.id = key
+      playerScore.className = "score"
+      playerScore.textContent = characterState.score
+      playerScore.style.color = characterState.color
+      playerScore.style.backgroundColor = "grey"
+      if (document.getElementById(key)) {
+        document.getElementById(key).remove()
+      }
+      document.body.appendChild(playerScore)
+      scoreBoard.push(playerScore.id)
+    }
+    
+    characterState.snakeBody.forEach(segment => {
+      const addedCharacterElement = document.createElement('div')
+      addedCharacterElement.style.gridRowStart = segment.y
+      addedCharacterElement.style.gridColumnStart = segment.x
+      let playerRef = firebase.database().ref(`players/${key}`)
+      let localPlayer = {}
+      playerRef.on("value", (snapshot) => {
+        //Fires whenever a change occurs
+        localPlayer = snapshot.val() || {}
+        if (localPlayer.color) {
+          addedCharacterElement.style.backgroundColor = localPlayer.color
+        }
       })
-
+      addedCharacterElement.classList.add('Character')
+      playerElements[key] = addedCharacterElement;
+      gameContainer.appendChild(addedCharacterElement);
     })
+
+  })
 }
 
 export function initialzePlayerMovement() {
