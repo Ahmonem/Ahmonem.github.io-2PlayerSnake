@@ -89,6 +89,8 @@ function initGame() {
       drawTree(gameContainer, treeElement, allTreeRef)
   }
 
+  
+
   function checkDeath() {
     if (outsideGrid(getSnakeHead(players, playerId), players, playerId) || snakeIntersection(players, playerId) ){
       playerRef.update({
@@ -152,7 +154,18 @@ function initGame() {
   });
 }
 
+
 firebase.auth().onAuthStateChanged((user) => {
+  
+  function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+  
   if (user) {
     //You're logged in!
     playerId = user.uid;
@@ -164,7 +177,7 @@ firebase.auth().onAuthStateChanged((user) => {
       id: playerId,
       snakeBody: [{x, y}],
       lostGame: false,
-      color: null,
+      color: getRandomColor(),
       score: 0,
       scoreAdded: false
     })

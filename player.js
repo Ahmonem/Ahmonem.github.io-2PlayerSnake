@@ -82,6 +82,11 @@ export function drawSnake(players, gameContainer, playerElements, playerId) {
         localPlayer = snapshot.val() || {}
         if (localPlayer.color) {
           addedCharacterElement.style.backgroundColor = localPlayer.color
+          // console.log("1", localPlayer.color, key)
+        }
+        else{
+          addedCharacterElement.style.backgroundColor = characterState.score
+          // console.log("2", characterState.score, key)
         }
       })
       addedCharacterElement.classList.add('Character')
