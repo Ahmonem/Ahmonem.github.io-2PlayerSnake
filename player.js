@@ -130,21 +130,26 @@ export function getSnakeHead(players, playerId) {
     }
 }
 
-export function onSnake(position, {ignoreHead = false} = {}, players, playerId) {
+export function onSnake(position, {ignoreHead = false} = {}, players, playerId, playerPositions, playerRef) {
   if (players[playerId]) {
-    return players[playerId].snakeBody.some((segment, index) => {
-      if (ignoreHead && index === 0) return false
-      if (isCollision(segment, position)) {
-        players[playerId].lostGame = true
-      }
-      return isCollision(segment, position)
+    playerPositions.forEach((object) => {
+      return object.snakeBody.some((segment, index) => {
+        if (ignoreHead && index === 0) return false
+        if (isCollision(segment, position)) {
+          players[playerId].lostGame = true
+          playerRef.update({
+            lostGame: true
+          })
+        }
+        return isCollision(segment, position)
+      })
     })
   }
 }
 
-export function snakeIntersection(players, playerId) {
+export function snakeIntersection(players, playerId, playerPositions, playerRef) {
   if (players[playerId]) {
-      return onSnake(players[playerId].snakeBody[0], {ignoreHead: true}, players, playerId)
+      return onSnake(players[playerId].snakeBody[0], {ignoreHead: true}, players, playerId, playerPositions, playerRef)
   }
 }
 

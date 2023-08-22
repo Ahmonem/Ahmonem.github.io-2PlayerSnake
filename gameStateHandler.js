@@ -11,6 +11,7 @@ let gameOver = false
 let playerId;
 let playerRef;
 let players = {};
+let playerPositions = []
 let playerElements = {};
 let apple = {}
 let tree = {}
@@ -31,7 +32,22 @@ function initGame() {
   allPlayersRef.on("value", (snapshot) => {
     //Fires whenever a change occurs
     players = snapshot.val() || {};
+  
+    Object.keys(players).forEach((key) => {
+      let player = players[key]
+   
+      if (playerPositions.some(obj => obj.key === key)) {
+        playerPositions.forEach((object) => {
+          if (object.key === key) {
+            object.snakeBody = player.snakeBody
+          }
+        })
+      }
+      else {
+        playerPositions.push({key: key, snakeBody: player.snakeBody})
+      }
     
+    })
   })
 
   function main(currentTime) {
@@ -41,6 +57,7 @@ function initGame() {
           if (key.lostGame) {
             const winOrLose = document.getElementById('winOrLose')
             winOrLose.innerHTML = "You Lose"
+            console.log("ran")
             setTimeout(() => {
               allAppleRef.remove()
               allTreeRef.remove()
@@ -52,6 +69,7 @@ function initGame() {
           if (!key.lostGame) {
             const winOrLose = document.getElementById('winOrLose')
             winOrLose.innerHTML = "You Win"
+            console.log("ran")
             setTimeout(() => {
               allAppleRef.remove()
               allTreeRef.remove()
@@ -92,13 +110,13 @@ function initGame() {
   
 
   function checkDeath() {
-    if (outsideGrid(getSnakeHead(players, playerId), players, playerId) || snakeIntersection(players, playerId) ){
+    if (outsideGrid(getSnakeHead(players, playerId), players, playerId) || snakeIntersection(players, playerId, playerPositions, playerRef) ){
       playerRef.update({
         lostGame: true
       })
 
 
-      gameOver = outsideGrid(getSnakeHead(players, playerId), players, playerId) || snakeIntersection(players, playerId)      
+      gameOver = outsideGrid(getSnakeHead(players, playerId), players, playerId) || snakeIntersection(players, playerId, playerPositions, playerRef)      
     }
   }
 
