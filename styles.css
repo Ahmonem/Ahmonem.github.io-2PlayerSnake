@@ -11,9 +11,9 @@ body {
   align-items: center;
   margin: 0;
   background-color: #578a34;
-  z-index: -50;
+  z-index: 4;
   font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
-
+  
 }
 
 .Character {
@@ -24,9 +24,9 @@ body {
   font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
   font-size: 20px; 
   line-height: 200%; 
+  text-overflow: clip;
+  text-rendering: geometricPrecision;
 }
-
-
 
 .button {
   position: absolute; 

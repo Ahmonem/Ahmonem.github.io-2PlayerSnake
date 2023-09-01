@@ -72,7 +72,6 @@ function initGame() {
             audio.play();
             const winOrLose = document.getElementById('winOrLose')
             winOrLose.innerHTML = "You Lose"
-            console.log("ran")
             setTimeout(() => {
               allAppleRef.remove()
               allTreeRef.remove()

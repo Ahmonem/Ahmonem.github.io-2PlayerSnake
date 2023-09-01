@@ -236,8 +236,8 @@ export function drawSnake(players, gameContainer, playerElements, playerId, char
       gameContainer.appendChild(addedCharacterElement);
     })
 
-    for (let i = 1; i < 22; i++) {
-      for (let j = 1; j < 22; j++) {
+    for (let i = 1; i < 23; i++) {
+      for (let j = 1; j < 23; j++) {
         if (i%2 == 0) {
           if (j%2 == 0) {
             const evenColor = document.createElement('div')
