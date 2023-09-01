@@ -12,6 +12,7 @@ let playerId;
 let playerRef;
 let players = {};
 let playerPositions = []
+let characterScores = []
 let playerElements = {};
 let apple = {}
 let tree = {}
@@ -22,7 +23,7 @@ let playerOneKey
 const gameContainer = document.getElementById('game-board')
 
 function initGame() {
-  
+
   initialzePlayerMovement()
 
   const allPlayersRef = firebase.database().ref(`players`);
@@ -46,6 +47,18 @@ function initGame() {
       else {
         playerPositions.push({key: key, snakeBody: player.snakeBody})
       }
+
+      if (characterScores.some(obj => obj.key === key)) {
+        characterScores.forEach((object) => {
+          if (object.key === key) {
+            object.score = player.score
+          }
+        })
+      }
+      else {
+        characterScores.push({key: key, score: player.score})
+      }
+
     
     })
   })
@@ -55,6 +68,8 @@ function initGame() {
       checkIfAPlayerLostGame(players).forEach((key) => {
         if (key.id === playerId) {
           if (key.lostGame) {
+            var audio = new Audio('./audio/Lost.mp3');
+            audio.play();
             const winOrLose = document.getElementById('winOrLose')
             winOrLose.innerHTML = "You Lose"
             console.log("ran")
@@ -102,7 +117,7 @@ function initGame() {
 
   function draw() {
       gameContainer.innerHTML = ''
-      drawSnake(players, gameContainer, playerElements, playerId)
+      drawSnake(players, gameContainer, playerElements, playerId, characterScores)
       drawApple(appleElement, gameContainer, allAppleRef)
       drawTree(gameContainer, treeElement, allTreeRef)
   }
@@ -114,7 +129,6 @@ function initGame() {
       playerRef.update({
         lostGame: true
       })
-
 
       gameOver = outsideGrid(getSnakeHead(players, playerId), players, playerId) || snakeIntersection(players, playerId, playerPositions, playerRef)      
     }

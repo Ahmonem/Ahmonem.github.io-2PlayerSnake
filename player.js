@@ -7,7 +7,115 @@ let inputDirection = {x: 0, y:0}
 let lastInputDirection = {x: 0, y:0}
 let pickedColors = []
 let scoreBoard = []
+let paused = false
+let mainMenu = true
+let InstructionsInfo = false
+const openMenuButtons = document.querySelectorAll('[data-menu-target]')
+const closeMenuButtons = document.querySelectorAll('[data-close-button]')
+const closeMainMenuButtons = document.querySelectorAll('[data-main-target]')
+const openMainMenuButtons = document.querySelectorAll('[data-open-target]')
+const openInstructionsButton = document.querySelectorAll('[data-info-target]')
+const overlay = document.getElementById('overlay')
 
+openMenuButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const menu = document.querySelector(button.dataset.menuTarget)
+    openMenu(menu)
+  })
+})
+
+closeMenuButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const menu = button.closest('.menu')
+    closeMenu(menu)
+  })
+})
+
+closeMainMenuButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const menu = document.querySelector('.mainmenu.active')
+    closeMainMenu(menu)
+  })
+})
+
+openMainMenuButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const menu = document.querySelector('.mainmenu')
+    openMainMenu(menu)
+  })
+})
+
+openInstructionsButton.forEach(button => {
+  button.addEventListener('click', () => {
+    const menu = document.querySelector('.InstructionsInfo') || document.querySelector('.InstructionsInfo.active')
+    if (!InstructionsInfo) { 
+      openInstructionsInfo(menu)
+      InstructionsInfo = true
+    }
+    else {
+      closeInstructionsInfo(menu)
+      InstructionsInfo = false
+    }
+  })
+})
+
+function openInstructionsInfo(menu) {
+  if (menu == null) return
+  menu.classList.add('active')
+}
+
+function closeInstructionsInfo(menu) {
+  if (menu == null) return
+  menu.classList.remove('active')
+}
+
+function openMenu(menu) {
+  if (menu == null) return
+  menu.classList.add('active')
+  overlay.classList.add('active')
+  inputDirection = {x: 0, y:0}
+  paused = true
+}
+
+function closeMenu(menu) {
+  if (menu == null) return
+  menu.classList.remove('active')
+  overlay.classList.remove('active')
+  inputDirection = lastInputDirection
+  paused = false
+}
+
+function closeMainMenu(menu) {
+  if (menu == null) return
+  menu.classList.remove('active')
+  document.querySelector('.maintitle.active').classList.remove('active')
+  document.querySelector('.playButton.active').classList.remove('active')
+  const titles = document.querySelectorAll('.span1.active')
+  titles.forEach(title => {
+    title.classList.remove('active')
+    title.classList.add('hidden')
+  })
+  inputDirection = lastInputDirection
+  paused = false
+  mainMenu = false
+}
+
+function openMainMenu(menu) {
+  if (menu == null) return
+  menu.classList.add('active')
+  document.querySelector('.maintitle').classList.add('active')
+  document.querySelector('.playButton').classList.add('active')
+  overlay.classList.remove('active')
+  document.querySelector('.menu.active').classList.remove('active')
+  const titles = document.querySelectorAll('.span1')
+  titles.forEach(title => {
+    title.classList.add('active')
+    title.classList.remove('hidden')
+  })
+  inputDirection = {x: 0, y:0}
+  paused = true
+  mainMenu = true
+}
 
 function getRandomColor() {
   var letters = '0123456789ABCDEF';
@@ -30,7 +138,7 @@ export function removeItemOnce(arr, value) {
   return arr;
 }
 
-export function drawSnake(players, gameContainer, playerElements, playerId) {
+export function drawSnake(players, gameContainer, playerElements, playerId, characterScores) {
   Object.keys(players).forEach((key) => {
     const characterState = players[key];
     if (characterState.color == null) {
@@ -41,15 +149,47 @@ export function drawSnake(players, gameContainer, playerElements, playerId) {
       // console.log(characterState.color, "not null", "Other Player:", key, "Current Player:", playerId)
     }
     pickedColors.push(characterState.color)
-      
+    
+    characterScores.sort(function(a, b) {
+      return parseFloat(b.score) - parseFloat(a.score);
+    });
+
     if (playerId == key) {
       const playerScore = document.createElement('div')
-      playerScore.style.left = "500px"
+
+      // console.table(characterScores)
+      characterScores.forEach((object, index) => {
+        if (object.key == playerId) {
+          if (index == 0) {
+            playerScore.style.top = "32px"
+            // console.log(object.key, ":", index, playerScore.style.top, object.score)
+          }
+          else if(index == 1) {
+            playerScore.style.top = "64px"
+            // console.log(object.key, ":", index, playerScore.style.top, object.score)
+          }
+        }
+        else {
+            var otherPlayerScore = document.getElementById(object.key)
+            if (otherPlayerScore) {
+              if (index == 0) {
+                otherPlayerScore.style.top = "32px"
+                // console.log(object.key, ":", index, otherPlayerScore.style.top, object.score, "32")
+              }
+              else if(index == 1) {
+                otherPlayerScore.style.top = "64px"
+                // console.log(object.key, ":", index, otherPlayerScore.style.top, object.score, "64")
+              }
+            }
+            else {
+              // console.error("Other Player Doesnt Exist")
+            }
+          };
+      })
       playerScore.id = key
       playerScore.className = "score"
       playerScore.textContent = characterState.score
       playerScore.style.color = characterState.color
-      playerScore.style.backgroundColor = "grey"
       if (document.getElementById(key)) {
         document.getElementById(key).remove()
       }
@@ -58,12 +198,11 @@ export function drawSnake(players, gameContainer, playerElements, playerId) {
     }
     else {
       const playerScore = document.createElement('div')
-      playerScore.style.left = "500px"
       playerScore.id = key
       playerScore.className = "score"
       playerScore.textContent = characterState.score
       playerScore.style.color = characterState.color
-      playerScore.style.backgroundColor = "grey"
+      
       if (document.getElementById(key)) {
         document.getElementById(key).remove()
       }
@@ -71,10 +210,13 @@ export function drawSnake(players, gameContainer, playerElements, playerId) {
       scoreBoard.push(playerScore.id)
     }
     
-    characterState.snakeBody.forEach(segment => {
+    characterState.snakeBody.forEach((segment, index)=> {
       const addedCharacterElement = document.createElement('div')
       addedCharacterElement.style.gridRowStart = segment.y
       addedCharacterElement.style.gridColumnStart = segment.x
+      if (playerId == key && index == 0) {
+        addedCharacterElement.textContent = "You"
+      }
       let playerRef = firebase.database().ref(`players/${key}`)
       let localPlayer = {}
       playerRef.on("value", (snapshot) => {
@@ -94,12 +236,35 @@ export function drawSnake(players, gameContainer, playerElements, playerId) {
       gameContainer.appendChild(addedCharacterElement);
     })
 
+    for (let i = 1; i < 22; i++) {
+      for (let j = 1; j < 22; j++) {
+        if (i%2 == 0) {
+          if (j%2 == 0) {
+            const evenColor = document.createElement('div')
+            evenColor.style.gridRowStart = i
+            evenColor.style.gridColumnStart = j
+            evenColor.classList.add('evenColor')
+            gameContainer.appendChild(evenColor);
+          }
+        }
+        else {
+          if (!(j%2 == 0)) {
+            const oddColor = document.createElement('div')
+            oddColor.style.gridRowStart = i
+            oddColor.style.gridColumnStart = j
+            oddColor.classList.add('oddColor')
+            gameContainer.appendChild(oddColor);
+          }
+        }
+      }
+    }
+
   })
 }
 
 export function initialzePlayerMovement() {
   window.addEventListener("keydown",  e => {
-    switch(e.key) {
+    switch(e.key.toLowerCase()) {
         case "w":
             if (lastInputDirection.y !== 0) break
             inputDirection = {x : 0, y: -1}
@@ -159,7 +324,7 @@ export function getInputDirection() {
 }
 
 export function updateSnake(players, playerId, playerRef, tree, apple) {
-    if (players[playerId]) {
+    if (players[playerId] && !paused && !mainMenu) {
       addSegments(players, playerId)
 
       inputDirection = getInputDirection()
@@ -204,7 +369,8 @@ export function attemptGrabApple(x, y, apple, players, playerId, playerRef) {
       playerRef.update({
         score: players[playerId].score + 1
       })
-      
+      var audio = new Audio('./audio/appleEat.mp3');
+      audio.play();
       placeTree(x,y, players, playerId)
     }
   }
@@ -217,7 +383,8 @@ export function hitTree(x, y, players, playerId, playerRef, tree) {
     playerRef.update({
       lostGame: true
     })
-
+    var audio = new Audio('./audio/Lost.mp3');
+    audio.play();
     console.log(playerRef, "playerRef")
   }
 }

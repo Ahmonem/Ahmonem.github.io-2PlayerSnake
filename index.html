@@ -7,31 +7,78 @@
     <link rel="stylesheet" href="styles.css" type="text/css">
   </head>
   <body>
-    <p> 
-      Move around using the W,A,S,D keys
-      <br>
-      Be the first to capture the apple to increase your score
-      <br>
-      When a player captures an apple a tree spawns,
-      <br>
-      blocking other players from going on that square
-      <br>
-      When you capture an apple your snake increases by 2
-      <br>
-      Last one alive wins
-    </p>
-    <h1>
-      Instructions
-    </h1>
+
+    <button data-main-target="#mainmenu" class="playButton active" id="playButton active">Play</button>
+    <div class="mainmenu active" id="mainmenu"></div>
+    
+    <div class="maintitle active" id="maintitle">
+        <span1 class="span1">S</span1>
+        <span1 class="span1">N</span1>
+        <span1 class="span1">A</span1>
+        <span1 class="span1">K</span1>
+        <span1 class="span1">E</span1>
+    </div>
+    
     <script>
-      function pauseGame() {
-        confirm("Game is paused press OK to resume")
-      }
+      let spanTexts = document.getElementsByTagName("span1");
+        window.onload = function() {
+          for (spanText of spanTexts) {
+            spanText.classList.add("active");
+          }
+        }
     </script>
-      <button class="button" id="button" onclick="pauseGame()"> Pause </button>
+
+    <button data-info-target class="Instructions" id="Instructions">Instructions</button>
+
+    
+
+    <div class="InstructionsInfo"> 
+      <p> 
+        Move around using the W,A,S,D keys
+        <br>
+        Be the first to capture the apple to increase your score
+        <br>
+        When a player captures an apple a tree spawns,
+        <br>
+        blocking other players from going on that square
+        <br>
+        When you capture an apple your snake increases by 2
+        <br>
+        Last one alive wins
+      </p>
+      <h1>
+        Instructions
+      </h1>
+    </div>
+    <div class="leaderboard" >Leaderboard</div>
+    
+    <div class="rank"  
+      >1.<br><span 
+      >2.</span><br><span 
+      >3.</span><br><span 
+      >4.</span><br><span 
+      >5.</span><br><span 
+      >6.</span><br><span 
+      >7.</span><br><span 
+      >8.</span><br><span 
+      >9.</span><br><span 
+      >10.</span><br>
+    </div>
+
+
+    
+      <button data-menu-target="#menu" class="button" id="pauseButton">Pause</button>
+      <div class="menu" id="menu">
+        <div class="menu-header">
+          <div class="title"> Menu </div>
+          <button data-close-button class="close-button">&times;</button>
+          <button data-open-target="#mainmenu" class="menu1">Home</button>
+        </div>
+        <div class="menu-body"> Press X to Resume </div>
+      </div>
+      <div id="overlay"></div>
       <div class="score" id="score"></div>
       <div class="winOrLose" id="winOrLose"></div>
-      <a class="menu" href="https://osaury.github.io/Ahmonem.github.io/">Menu</a>
     <div id="game-board">
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
