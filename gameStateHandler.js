@@ -68,7 +68,7 @@ function initGame() {
       checkIfAPlayerLostGame(players).forEach((key) => {
         if (key.id === playerId) {
           if (key.lostGame) {
-            var audio = new Audio('./images/Lost.mp3');
+            var audio = new Audio('./assets/Lost.mp3');
             audio.play();
             const winOrLose = document.getElementById('winOrLose')
             winOrLose.innerHTML = "You Lose"

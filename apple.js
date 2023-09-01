@@ -11,7 +11,7 @@ export function drawApple(appleElement, gameContainer, allAppleRef) {
       // Create the DOM Element
       const newApple = document.createElement('div')
       newApple.classList.add('Apple')
-      newApple.innerHTML = `<img src="./images/apple.png" alt="hi"  width="40" height="40"> `
+      newApple.innerHTML = `<img src="./assets/apple.png" alt="hi"  width="40" height="40"> `
 
       
       // Position the Element
