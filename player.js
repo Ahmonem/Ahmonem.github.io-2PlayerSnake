@@ -369,7 +369,7 @@ export function attemptGrabApple(x, y, apple, players, playerId, playerRef) {
       playerRef.update({
         score: players[playerId].score + 1
       })
-      var audio = new Audio('./audio/appleEat.mp3');
+      var audio = new Audio('./images/appleEat.mp3');
       audio.play();
       placeTree(x,y, players, playerId)
     }
@@ -383,7 +383,7 @@ export function hitTree(x, y, players, playerId, playerRef, tree) {
     playerRef.update({
       lostGame: true
     })
-    var audio = new Audio('./audio/Lost.mp3');
+    var audio = new Audio('./images/Lost.mp3');
     audio.play();
     console.log(playerRef, "playerRef")
   }
