@@ -4,7 +4,7 @@ import { drawSnake, getSnakeHead, snakeIntersection, updateSnake, initialzePlaye
 import { randomGridPosition, getKeyString, outsideGrid, checkIfAPlayerLostGame, checkifLostOrWon } from "./gameMechanics.js"
 
 let lastRenderTime = 0
-let SNAKE_SPEED = 10
+let SNAKE_SPEED = 5
 
 let gameOver = false
 
