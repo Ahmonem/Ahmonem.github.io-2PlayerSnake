@@ -10,6 +10,7 @@ let scoreBoard = []
 let paused = false
 let mainMenu = true
 let InstructionsInfo = false
+let snakeAddAmount = 100
 const openMenuButtons = document.querySelectorAll('[data-menu-target]')
 const closeMenuButtons = document.querySelectorAll('[data-close-button]')
 const closeMainMenuButtons = document.querySelectorAll('[data-main-target]')
@@ -142,11 +143,16 @@ export function drawSnake(players, gameContainer, playerElements, playerId, char
   Object.keys(players).forEach((key) => {
     const characterState = players[key];
     if (characterState.color == null) {
-      characterState.color = getRandomColor()
+      let playerRef = firebase.database().ref(`players/${key}`)
+      let localPlayer = {}
+      playerRef.once("value", (snapshot) => {
+          //Fires whenever a change occurs
+          localPlayer = snapshot.val() || {}
+          if (localPlayer.color) {
+            characterState.color = localPlayer.color
+          }
+        })
       // console.log(characterState.color, "Other Player:",key, "Current Player:", playerId)
-    }
-    else {
-      // console.log(characterState.color, "not null", "Other Player:", key, "Current Player:", playerId)
     }
     pickedColors.push(characterState.color)
     
@@ -158,6 +164,10 @@ export function drawSnake(players, gameContainer, playerElements, playerId, char
       const playerScore = document.createElement('div')
 
       // console.table(characterScores)
+      playerScore.id = key
+      playerScore.className = "score"
+      playerScore.textContent = characterState.score
+      playerScore.style.color = characterState.color
       characterScores.forEach((object, index) => {
         if (object.key == playerId) {
           if (index == 0) {
@@ -174,11 +184,11 @@ export function drawSnake(players, gameContainer, playerElements, playerId, char
             if (otherPlayerScore) {
               if (index == 0) {
                 otherPlayerScore.style.top = "32px"
-                // console.log(object.key, ":", index, otherPlayerScore.style.top, object.score, "32")
+                console.log(object.key, ":", index, otherPlayerScore.style.top, object.score, "32")
               }
               else if(index == 1) {
                 otherPlayerScore.style.top = "64px"
-                // console.log(object.key, ":", index, otherPlayerScore.style.top, object.score, "64")
+                console.log(object.key, ":", index, otherPlayerScore.style.top, object.score, "64")
               }
             }
             else {
@@ -186,10 +196,6 @@ export function drawSnake(players, gameContainer, playerElements, playerId, char
             }
           };
       })
-      playerScore.id = key
-      playerScore.className = "score"
-      playerScore.textContent = characterState.score
-      playerScore.style.color = characterState.color
       if (document.getElementById(key)) {
         document.getElementById(key).remove()
       }
@@ -202,6 +208,18 @@ export function drawSnake(players, gameContainer, playerElements, playerId, char
       playerScore.className = "score"
       playerScore.textContent = characterState.score
       playerScore.style.color = characterState.color
+      characterScores.forEach((object, index) => {
+        if (object.key == key) {
+          if (index == 0) {
+            playerScore.style.top = "32px"
+            // console.log(object.key, ":", index, playerScore.style.top, object.score)
+          }
+          else if(index == 1) {
+            playerScore.style.top = "64px"
+            // console.log(object.key, ":", index, playerScore.style.top, object.score)
+          }
+        }
+      })
       
       if (document.getElementById(key)) {
         document.getElementById(key).remove()
@@ -213,24 +231,13 @@ export function drawSnake(players, gameContainer, playerElements, playerId, char
     characterState.snakeBody.forEach((segment, index)=> {
       const addedCharacterElement = document.createElement('div')
       addedCharacterElement.style.gridRowStart = segment.y
+      addedCharacterElement.id = playerId
       addedCharacterElement.style.gridColumnStart = segment.x
       if (playerId == key && index == 0) {
         addedCharacterElement.textContent = "You"
       }
-      let playerRef = firebase.database().ref(`players/${key}`)
-      let localPlayer = {}
-      playerRef.on("value", (snapshot) => {
-        //Fires whenever a change occurs
-        localPlayer = snapshot.val() || {}
-        if (localPlayer.color) {
-          addedCharacterElement.style.backgroundColor = localPlayer.color
-          // console.log("1", localPlayer.color, key)
-        }
-        else{
-          addedCharacterElement.style.backgroundColor = characterState.score
-          // console.log("2", characterState.score, key)
-        }
-      })
+      addedCharacterElement.style.backgroundColor = characterState.color
+      console.log("hi")
       addedCharacterElement.classList.add('Character')
       playerElements[key] = addedCharacterElement;
       gameContainer.appendChild(addedCharacterElement);
@@ -365,7 +372,7 @@ export function attemptGrabApple(x, y, apple, players, playerId, playerRef) {
   if (apple) {
     if (apple[key]) {
       firebase.database().ref(`apple`).remove();
-      expandSnake(2)
+      expandSnake(snakeAddAmount)
       playerRef.update({
         score: players[playerId].score + 1
       })

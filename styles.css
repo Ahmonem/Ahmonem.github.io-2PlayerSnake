@@ -24,8 +24,6 @@ body {
   font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
   font-size: 20px; 
   line-height: 200%; 
-  text-overflow: clip;
-  text-rendering: geometricPrecision;
 }
 
 .button {
@@ -48,7 +46,7 @@ body {
   display:block;
   opacity: 1;
   justify-content: center;
-  right: 75%;
+  right: 76%;
   bottom: 50%;
 }
 
@@ -82,7 +80,6 @@ body {
   text-align: left; 
   right: 130px; 
   width: 200px; 
-  top: 64px; 
   color: rgb(0, 0, 0); 
   font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
   font-size: 21px; 
@@ -265,6 +262,9 @@ h1 {
 
 .menu-body {
   padding: 10px 15px;
+  font-weight: bold; 
+  font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 17px; 
 }
 
 #overlay {

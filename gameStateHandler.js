@@ -4,7 +4,7 @@ import { drawSnake, getSnakeHead, snakeIntersection, updateSnake, initialzePlaye
 import { randomGridPosition, getKeyString, outsideGrid, checkIfAPlayerLostGame, checkifLostOrWon } from "./gameMechanics.js"
 
 let lastRenderTime = 0
-let SNAKE_SPEED = 5
+let SNAKE_SPEED = 10
 
 let gameOver = false
 
@@ -68,6 +68,7 @@ function initGame() {
       checkIfAPlayerLostGame(players).forEach((key) => {
         if (key.id === playerId) {
           if (key.lostGame) {
+            document.getElementById(playerId).textContent = ""
             var audio = new Audio('./assets/Lost.mp3');
             audio.play();
             const winOrLose = document.getElementById('winOrLose')
@@ -128,7 +129,6 @@ function initGame() {
       playerRef.update({
         lostGame: true
       })
-
       gameOver = outsideGrid(getSnakeHead(players, playerId), players, playerId) || snakeIntersection(players, playerId, playerPositions, playerRef)      
     }
   }

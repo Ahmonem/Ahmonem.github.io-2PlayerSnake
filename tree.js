@@ -11,7 +11,7 @@ export function drawTree(gameContainer, treeElement, allTreeRef) {
       const newTree = document.createElement('div')
       newTree.classList.add("Tree")
       newTree.innerHTML = `
-      <img src="./assets/tree.png" alt="hi"  width="40" height="40">
+      <img src="./assets/tree.png" alt="Tree"  width="40" height="40">
       `
       newTree.style.backgroundColor = tree.color
 
