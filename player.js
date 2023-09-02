@@ -118,14 +118,6 @@ function openMainMenu(menu) {
   mainMenu = true
 }
 
-function getRandomColor() {
-  var letters = '0123456789ABCDEF';
-  var color = '#';
-  for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-}
 
 export function randomFromArray() {
   return Math.floor(Math.random() * 7) 
@@ -170,29 +162,16 @@ export function drawSnake(players, gameContainer, playerElements, playerId, char
       playerScore.style.color = characterState.color
       characterScores.forEach((object, index) => {
         if (object.key == playerId) {
-          if (index == 0) {
-            playerScore.style.top = "32px"
-            // console.log(object.key, ":", index, playerScore.style.top, object.score)
-          }
-          else if(index == 1) {
-            playerScore.style.top = "64px"
-            // console.log(object.key, ":", index, playerScore.style.top, object.score)
-          }
+
+            playerScore.style.top = ((index * 32) + 32), "px"
+
         }
         else {
             var otherPlayerScore = document.getElementById(object.key)
+
+
             if (otherPlayerScore) {
-              if (index == 0) {
-                otherPlayerScore.style.top = "32px"
-                console.log(object.key, ":", index, otherPlayerScore.style.top, object.score, "32")
-              }
-              else if(index == 1) {
-                otherPlayerScore.style.top = "64px"
-                console.log(object.key, ":", index, otherPlayerScore.style.top, object.score, "64")
-              }
-            }
-            else {
-              // console.error("Other Player Doesnt Exist")
+              otherPlayerScore.style.top = ((index * 32) + 32), "px"
             }
           };
       })
@@ -209,15 +188,10 @@ export function drawSnake(players, gameContainer, playerElements, playerId, char
       playerScore.textContent = characterState.score
       playerScore.style.color = characterState.color
       characterScores.forEach((object, index) => {
+
+
         if (object.key == key) {
-          if (index == 0) {
-            playerScore.style.top = "32px"
-            // console.log(object.key, ":", index, playerScore.style.top, object.score)
-          }
-          else if(index == 1) {
-            playerScore.style.top = "64px"
-            // console.log(object.key, ":", index, playerScore.style.top, object.score)
-          }
+          playerScore.style.top = ((index * 32) + 32), "px"
         }
       })
       
@@ -227,16 +201,16 @@ export function drawSnake(players, gameContainer, playerElements, playerId, char
       document.body.appendChild(playerScore)
       scoreBoard.push(playerScore.id)
     }
-    
+
     characterState.snakeBody.forEach((segment, index)=> {
       const addedCharacterElement = document.createElement('div')
       addedCharacterElement.style.gridRowStart = segment.y
-      addedCharacterElement.id = playerId
+      addedCharacterElement.id = (playerId + "Character")
       addedCharacterElement.style.gridColumnStart = segment.x
+      addedCharacterElement.style.backgroundColor = characterState.color
       if (playerId == key && index == 0) {
         addedCharacterElement.textContent = "You"
       }
-      addedCharacterElement.style.backgroundColor = characterState.color
       console.log("hi")
       addedCharacterElement.classList.add('Character')
       playerElements[key] = addedCharacterElement;
