@@ -91,6 +91,17 @@ function closeMainMenu(menu) {
   menu.classList.remove('active')
   document.querySelector('.maintitle.active').classList.remove('active')
   document.querySelector('.playButton.active').classList.remove('active')
+  document.querySelector('.allTimeLeaderboard.active').classList.remove('active')
+  document.querySelector('.allTimeRank.active').classList.remove('active')
+  document.querySelector('.usernameForm.active').classList.remove('active')
+  document.querySelector('.username.active').classList.remove('active')
+  document.querySelector('.submitUsername.active').classList.remove('active')
+  const scores = document.querySelectorAll('.allTimeScore.active')
+
+  scores.forEach(score => {
+    score.classList.remove('active')
+  })
+
   const titles = document.querySelectorAll('.span1.active')
   titles.forEach(title => {
     title.classList.remove('active')
@@ -106,6 +117,16 @@ function openMainMenu(menu) {
   menu.classList.add('active')
   document.querySelector('.maintitle').classList.add('active')
   document.querySelector('.playButton').classList.add('active')
+  document.querySelector('.allTimeLeaderboard').classList.add('active')
+  document.querySelector('.allTimeRank').classList.add('active')
+  document.querySelector('.usernameForm').classList.add('active')
+  document.querySelector('.username').classList.add('active')
+  document.querySelector('.submitUsername').classList.add('active')
+  const scores = document.querySelectorAll('.allTimeScore.active')
+
+  scores.forEach(score => {
+    score.classList.add('active')
+  })
   overlay.classList.remove('active')
   document.querySelector('.menu.active').classList.remove('active')
   const titles = document.querySelectorAll('.span1')
@@ -116,6 +137,15 @@ function openMainMenu(menu) {
   inputDirection = {x: 0, y:0}
   paused = true
   mainMenu = true
+}
+
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = 'B';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
 }
 
 
@@ -152,13 +182,122 @@ export function drawSnake(players, gameContainer, playerElements, playerId, char
       return parseFloat(b.score) - parseFloat(a.score);
     });
 
+    const allTimePlayersRef = firebase.database().ref(`allTimePlayers`)
+
+    allTimePlayersRef.once('value', (snapshot) => {
+        const allTimeScores = snapshot.val();
+        
+        let allTimeScoresArray = []
+        characterScores.forEach((object) => {
+          if (!allTimeScores && object.lostGame) {
+            const allTimePlayer = firebase.database().ref(`allTimePlayers/${object.key + object.username + object.score}`)
+            console.warn("allTimeScores doesnt exist")
+              allTimePlayer.set({
+                username: object.username,
+                score: object.score,
+                id: object.key
+              })
+          }
+          if (allTimeScores) {
+            Object.keys(allTimeScores).forEach((username) => {
+              let player = allTimeScores[username]
+              allTimeScoresArray.push(player)
+              if (Object.keys(allTimeScores).length < 10 && object.lostGame) {
+                let allTimePlayer = firebase.database().ref(`allTimePlayers/${object.key + object.username + object.score}`)
+                allTimePlayer.once('value', (snapshot) => {
+                  let currentAllTimePlayer = snapshot.val() || {}
+                  if (currentAllTimePlayer.score) {
+                    if (currentAllTimePlayer.score < object.score) {
+                      allTimePlayer.set({
+                        username: object.username,
+                        score: object.score,
+                        id: object.key
+                      })
+                    }
+                  }
+                  else if (currentAllTimePlayer.username !== object.username) {
+                    allTimePlayer = firebase.database().ref(`allTimePlayers/${object.key + object.username + object.score}`)
+                      allTimePlayer.set({
+                        username: object.username,
+                        score: object.score,
+                        id: object.key
+                      })
+                  }
+                  else {
+                    allTimePlayer.set({
+                      username: object.username,
+                      score: object.score,
+                      id: object.key
+                    })
+                  }
+                })
+              }
+              else if (Object.keys(allTimeScores).length >= 10 && object.lostGame) {
+                if (object.score > player.score && (object.key + object.username !== player.id + player.username)) {
+                  console.log(Object.keys(allTimeScores).length, player.id + player.username + player.score, allTimeScores)
+                  delete allTimeScores[player.id + player.username + player.score]
+                  console.log(Object.keys(allTimeScores).length, player.id + player.username + player.score, allTimeScores)
+                  firebase.database().ref(`allTimePlayers/${player.id + player.username + player.score}`).remove()
+                  const newAllTimePlayer = firebase.database().ref(`allTimePlayers/${object.key + object.username + object.score}`)
+                  newAllTimePlayer.once('value', (snapshot) => {
+                    let currentAllTimePlayer = snapshot.val() || {}
+                    if (currentAllTimePlayer.score) {
+                      if (currentAllTimePlayer.score < object.score) {
+                        newAllTimePlayer.set({
+                          username: object.username,
+                          score: object.score,
+                          id: object.key
+                        })
+                      }
+                    }
+                    else {
+                      newAllTimePlayer.set({
+                        username: object.username,
+                        score: object.score,
+                        id: object.key
+                      })
+                    }
+                  })
+                }
+              }
+            })
+          }
+        })
+
+        
+        allTimeScoresArray.sort(function(a, b) {
+          return parseFloat(b.score) - parseFloat(a.score);
+        });
+        
+        allTimeScoresArray.forEach((object, index) => {
+          if (document.querySelector('.maintitle.active') && index < 10) {
+            const allTimePlayerScore = document.createElement('div')
+            allTimePlayerScore.className = "allTimeScore active"
+            allTimePlayerScore.textContent = object.username + " - Score: " + object.score
+            allTimePlayerScore.style.color = characterState.color
+            allTimePlayerScore.id = object.id + object.username + object.score + "allTimeScore"
+            allTimePlayerScore.style.top = ((index * 31.5) + 62), "px"
+
+            if (document.getElementById(allTimePlayerScore.id)) {
+              document.getElementById(allTimePlayerScore.id).remove()
+            }
+            document.body.appendChild(allTimePlayerScore)
+          }
+        })
+        
+  
+        
+    })
+
+    
+
     if (playerId == key) {
       const playerScore = document.createElement('div')
 
       // console.table(characterScores)
       playerScore.id = key
       playerScore.className = "score"
-      playerScore.textContent = characterState.score
+      playerScore.textContent = characterState.username + " - Score: " + characterState.score
       playerScore.style.color = characterState.color
       characterScores.forEach((object, index) => {
         if (object.key == playerId) {
@@ -185,7 +324,7 @@ export function drawSnake(players, gameContainer, playerElements, playerId, char
       const playerScore = document.createElement('div')
       playerScore.id = key
       playerScore.className = "score"
-      playerScore.textContent = characterState.score
+      playerScore.textContent = characterState.username + " - Score: " + characterState.score
       playerScore.style.color = characterState.color
       characterScores.forEach((object, index) => {
 
@@ -209,9 +348,14 @@ export function drawSnake(players, gameContainer, playerElements, playerId, char
       addedCharacterElement.style.gridColumnStart = segment.x
       addedCharacterElement.style.backgroundColor = characterState.color
       if (playerId == key && index == 0) {
-        addedCharacterElement.textContent = "You"
+        const addedCharacterElementName = document.createElement('div')
+        addedCharacterElementName.style.gridRowStart = segment.y
+        addedCharacterElementName.style.gridColumnStart = segment.x
+        addedCharacterElementName.textContent = characterState.username
+        addedCharacterElementName.classList.add('CharacterText')
+
+        addedCharacterElement.appendChild(addedCharacterElementName)
       }
-      console.log("hi")
       addedCharacterElement.classList.add('Character')
       playerElements[key] = addedCharacterElement;
       gameContainer.appendChild(addedCharacterElement);

@@ -20,10 +20,24 @@ body {
   border: .25vmin solid black;
   z-index: 3;
   font-weight: bold; 
-  text-align: center; 
   font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
   font-size: 20px; 
-  line-height: 200%; 
+  line-height: 110px;
+  width: 45px;
+  height: 45px;
+
+}
+
+.CharacterText {
+  font-weight: bold; 
+  font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 20px; 
+  line-height: 200%;
+  width: 1fr;
+  height: 1fr;
+  justify-content: center;
+  align-items: center;
+  display: flex;
 }
 
 .button {
@@ -108,6 +122,76 @@ body {
   height: 350px;
 }
 
+.allTimeLeaderboard.active {
+  position: absolute; 
+  right: 110px; 
+  top: 30px; 
+  text-align: center; 
+  width: 255px; 
+  height: 27px; 
+  color: rgb(255, 255, 255); 
+  font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 21px; 
+  font-weight: bold; 
+  background-image: url(https://img001.prntscr.com/file/img001/Z1qb4mfsTAq2yVYwWWur8w.png);
+  height: 350px;
+  z-index: 100;
+  opacity: 1;
+}
+
+.allTimeLeaderboard {
+  position: absolute; 
+  right: 110px; 
+  top: 30px; 
+  text-align: center; 
+  width: 255px; 
+  height: 27px; 
+  color: rgb(255, 255, 255); 
+  font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 21px; 
+  font-weight: bold; 
+  background-image: url(https://img001.prntscr.com/file/img001/Z1qb4mfsTAq2yVYwWWur8w.png);
+  height: 350px;
+  z-index: 100;
+  opacity: 0;
+}
+
+.allTimeScore.active {
+  position: absolute; 
+  text-align: left; 
+  right: 130px; 
+  width: 200px; 
+  color: rgb(0, 0, 0); 
+  font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 21px; 
+  overflow: hidden; 
+  opacity: 1; 
+  z-index: 110; 
+  display: inline; 
+  cursor: default; 
+  line-height: 150%; 
+  transform: translateZ(0px);
+  font-weight: bold; 
+}
+
+.allTimeScore {
+  position: absolute; 
+  text-align: left; 
+  right: 130px; 
+  width: 200px; 
+  color: rgb(0, 0, 0); 
+  font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 21px; 
+  overflow: hidden; 
+  z-index: 7; 
+  display: inline; 
+  cursor: default; 
+  line-height: 150%; 
+  transform: translateZ(0px);
+  font-weight: bold; 
+  opacity: 0;
+}
+
 .Apple {
   z-index: 1;
 }
@@ -128,6 +212,45 @@ body {
  line-height: 150%; 
  transform: translateZ(0px);
 }
+
+.allTimeRank.active {
+  position: absolute; 
+  text-align: left; 
+  right: 100px;  
+  top: 62px; 
+  width: 255px; 
+  color: rgb(255, 255, 255); 
+  font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 21px;
+  font-weight: bold;
+  opacity: 1; 
+  z-index: 5; 
+  display: inline; 
+  cursor: default; 
+  line-height: 150%; 
+  transform: translateZ(0px);
+  z-index: 100;
+ }
+
+ .allTimeRank {
+  position: absolute; 
+  text-align: left; 
+  right: 100px;  
+  top: 62px; 
+  width: 255px; 
+  color: rgb(255, 255, 255); 
+  font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 21px;
+  font-weight: bold;
+  opacity: 1; 
+  z-index: 5; 
+  display: inline; 
+  cursor: default; 
+  line-height: 150%; 
+  transform: translateZ(0px);
+  z-index: 100;
+  opacity: 0;
+ }
 
 .score > :first-child {
   text-align: right;
@@ -350,6 +473,127 @@ h1 {
   transform: translateY(0px);
   opacity: 1;
   z-index: 100;
+}
+
+.username {
+  position: absolute; 
+  width: 187px; 
+  color: rgb(255, 255, 255); 
+  font-weight: bold; 
+  text-align: center; 
+  font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 20px; 
+  cursor: pointer; 
+  height: 47px; 
+  line-height: 47px; 
+  box-shadow: rgba(0, 0, 0, 0.75) 0px 3px 20px; 
+  border-radius: 34px; 
+  border-style: hidden;
+  display: inline-block; 
+  top: 35%;
+  right: 120%;
+  z-index: 110;
+  background-image: url(https://img001.prntscr.com/file/img001/Z1qb4mfsTAq2yVYwWWur8w.png);
+  opacity: 0;
+}
+
+.username.active {
+  position: absolute; 
+  width: 187px; 
+  color: rgb(255, 255, 255); 
+  font-weight: bold; 
+  text-align: center; 
+  font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 20px; 
+  cursor: pointer; 
+  height: 47px; 
+  line-height: 47px; 
+  box-shadow: rgba(0, 0, 0, 0.75) 0px 3px 20px; 
+  border-radius: 34px; 
+  border-style: hidden;
+  display: inline-block; 
+  top: 35%;
+  right: 120%;
+  z-index: 110;
+  background-image: url(https://img001.prntscr.com/file/img001/Z1qb4mfsTAq2yVYwWWur8w.png);
+  opacity: 1;
+}
+
+.submitUsername {
+  position: absolute; 
+  width: 87px; 
+  color: rgb(255, 255, 255); 
+  font-weight: bold; 
+  text-align: center; 
+  font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 20px; 
+  cursor: pointer; 
+  height: 47px; 
+  line-height: 47px; 
+  box-shadow: rgba(0, 0, 0, 0.75) 0px 3px 20px; 
+  border-radius: 34px; 
+  border-style: hidden;
+  display: inline-block; 
+  top: 35%;
+  right: 10%;
+  z-index: 110;
+  background-image: url(https://img001.prntscr.com/file/img001/Z1qb4mfsTAq2yVYwWWur8w.png);
+  opacity: 0;
+}
+
+.submitUsername.active {
+  position: absolute; 
+  width: 87px; 
+  color: rgb(255, 255, 255); 
+  font-weight: bold; 
+  text-align: center; 
+  font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 20px; 
+  cursor: pointer; 
+  height: 47px; 
+  line-height: 47px; 
+  box-shadow: rgba(0, 0, 0, 0.75) 0px 3px 20px; 
+  border-radius: 34px; 
+  border-style: hidden;
+  display: inline-block; 
+  top: 35%;
+  right: 10%;
+  z-index: 110;
+  background-image: url(https://img001.prntscr.com/file/img001/Z1qb4mfsTAq2yVYwWWur8w.png);
+  opacity: 1;
+}
+
+
+.usernameForm {
+  position: absolute; 
+  width: 87px; 
+  color: rgb(255, 255, 255); 
+  font-weight: bold; 
+  text-align: center; 
+  font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 20px; 
+  line-height: 47px; 
+  top: 35%;
+  right: 40%;
+  z-index: 100;
+  background-image: url(https://img001.prntscr.com/file/img001/Z1qb4mfsTAq2yVYwWWur8w.png);
+  opacity: 0;
+}
+
+.usernameForm.active {
+  position: absolute; 
+  width: 87px; 
+  color: rgb(255, 255, 255); 
+  font-weight: bold; 
+  text-align: center; 
+  font-family: Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 20px; 
+  line-height: 47px; 
+  top: 35%;
+  right: 40%;
+  z-index: 100;
+  background-image: url(https://img001.prntscr.com/file/img001/Z1qb4mfsTAq2yVYwWWur8w.png);
+  opacity: 1;
 }
 
 .maintitle span1.hidden {

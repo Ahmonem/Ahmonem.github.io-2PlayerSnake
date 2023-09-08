@@ -30,6 +30,8 @@ function initGame() {
   const allAppleRef = firebase.database().ref(`apple`);
   const allTreeRef = firebase.database().ref(`tree`)
 
+
+
   allPlayersRef.on("value", (snapshot) => {
     //Fires whenever a change occurs
     players = snapshot.val() || {};
@@ -50,13 +52,16 @@ function initGame() {
 
       if (characterScores.some(obj => obj.key === key)) {
         characterScores.forEach((object) => {
+          // console.log(object, player)
           if (object.key === key) {
             object.score = player.score
+            object.username = player.username
+            object.lostGame = player.lostGame
           }
         })
       }
       else {
-        characterScores.push({key: key, score: player.score})
+        characterScores.push({key: key, score: player.score, username: player.username, lostGame: player.lostGame})
       }
 
     
@@ -204,6 +209,62 @@ firebase.auth().onAuthStateChanged((user) => {
     playerId = user.uid;
     playerRef = firebase.database().ref(`players/${playerId}`);
 
+    function getRandomName() {
+      var nameList = [
+        'Time','Past','Future','Dev',
+        'Fly','Flying','Soar','Soaring','Power','Falling',
+        'Fall','Jump','Cliff','Mountain','Rend','Red','Blue',
+        'Green','Yellow','Gold','Demon','Demonic','Panda','Cat',
+        'Kitty','Kitten','Zero','Memory','Trooper','XX','Bandit',
+        'Fear','Light','Glow','Tread','Deep','Deeper','Deepest',
+        'Mine','Your','Worst','Enemy','Hostile','Force','Video',
+        'Game','Donkey','Mule','Colt','Cult','Cultist','Magnum',
+        'Gun','Assault','Recon','Trap','Trapper','Redeem','Code',
+        'Script','Writer','Near','Close','Open','Cube','Circle',
+        'Geo','Genome','Germ','Spaz','Shot','Echo','Beta','Alpha',
+        'Gamma','Omega','Seal','Squid','Money','Cash','Lord','King',
+        'Duke','Rest','Fire','Flame','Morrow','Break','Breaker','Numb',
+        'Ice','Cold','Rotten','Sick','Sickly','Janitor','Camel','Rooster',
+        'Sand','Desert','Dessert','Hurdle','Racer','Eraser','Erase','Big',
+        'Small','Short','Tall','Sith','Bounty','Hunter','Cracked','Broken',
+        'Sad','Happy','Joy','Joyful','Crimson','Destiny','Deceit','Lies',
+        'Lie','Honest','Destined','Bloxxer','Hawk','Eagle','Hawker','Walker',
+        'Zombie','Sarge','Capt','Captain','Punch','One','Two','Uno','Slice',
+        'Slash','Melt','Melted','Melting','Fell','Wolf','Hound',
+        'Legacy','Sharp','Dead','Mew','Chuckle','Bubba','Bubble','Sandwich','Smasher','Extreme','Multi','Universe','Ultimate','Death','Ready','Monkey','Elevator','Wrench','Grease','Head','Theme','Grand','Cool','Kid','Boy','Girl','Vortex','Paradox'
+    ];
+      return nameList[Math.floor( Math.random() * nameList.length )]
+    }
+
+    let username1 = getRandomName()
+
+    document.getElementById('username-form').addEventListener('submit', function (e) {
+      e.preventDefault(); // Prevent the default form submission.
+    
+      // Get the username from the input field.
+      username1 = document.getElementById('username').value || getRandomName();
+    
+      // Set the username data in the database (you can choose a specific path).
+      playerRef.set({
+        id: playerId,
+        snakeBody: [{x, y}],
+        lostGame: false,
+        color: getRandomColor(),
+        score: 0,
+        scoreAdded: false,
+        username: username1
+      })
+      .then(function() {
+        console.log('Username data sent to Firebase.', username1);
+        document.getElementById('username').placeholder = username1
+        document.getElementById('username').value = ""
+      })
+      .catch(function(error) {
+        console.error('Error sending data to Firebase: ', error);
+      });
+    });
+    
+
     const {x, y} = randomGridPosition();
     
     playerRef.set({
@@ -212,7 +273,8 @@ firebase.auth().onAuthStateChanged((user) => {
       lostGame: false,
       color: getRandomColor(),
       score: 0,
-      scoreAdded: false
+      scoreAdded: false,
+      username: username1
     })
 
 
